@@ -1,0 +1,16 @@
+buildscript {
+    repositories {
+        google()
+    }
+    dependencies {
+        classpath libs.google.services.classpath
+        classpath libs.navigation.classpath
+    }
+}
+
+plugins {
+    alias libs.plugins.android.application apply false
+    alias libs.plugins.kotlin.android apply false
+    alias libs.plugins.dagger.hilt apply false
+    alias libs.plugins.google.services apply false
+}

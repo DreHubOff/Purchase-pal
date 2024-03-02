@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/whatToBuyListsFragment">
+
+    <fragment
+        android:id="@+id/whatToBuyListsFragment"
+        android:name="com.aleksandrovych.purchasepal.lists.WhatToBuyListsFragment"
+        android:label="WhatToBuyListsFragment"
+        tools:layout="@layout/fragment_what_to_by_lists">
+
+        <action
+            android:id="@+id/action_whatToBuyListsFragment_to_whatToBuyFragment"
+            app:destination="@id/whatToBuyFragment" />
+        <action
+            android:id="@+id/action_whatToBuyListsFragment_to_addWhatToBuyListDialog"
+            app:destination="@id/addWhatToBuyListDialog" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/whatToBuyFragment"
+        android:name="com.aleksandrovych.purchasepal.whatToBuy.WhatToBuyFragment"
+        android:label="WhatToBuyFragment"
+        tools:layout="@layout/fragment_what_to_by">
+
+        <argument
+            android:name="whatToBuyListArg"
+            app:argType="com.aleksandrovych.purchasepal.lists.WhatToBuyList" />
+        <action
+            android:id="@+id/action_whatToBuyFragment_to_addWhatToBuyDialog"
+            app:destination="@id/addWhatToBuyDialog" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/addWhatToBuyListDialog"
+        android:name="com.aleksandrovych.purchasepal.lists.add.AddWhatToBuyListDialog"
+        android:label="AddWhatToBuyListDialog"
+        tools:layout="@layout/dialog_add_what_to_by_list">
+
+        <argument
+            android:name="whatToBuyListPrefillArg"
+            app:argType="com.aleksandrovych.purchasepal.lists.WhatToBuyList" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/addWhatToBuyDialog"
+        android:name="com.aleksandrovych.purchasepal.whatToBuy.add.AddWhatToBuyDialog"
+        android:label="AddWhatToBuyDialog"
+        tools:layout="@layout/dialog_add_what_to_by" >
+
+        <argument
+            android:name="positionPrefillArg"
+            app:argType="integer"
+            android:defaultValue="0" />
+
+        <argument
+            android:name="listIdArg"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </dialog>
+</navigation>
