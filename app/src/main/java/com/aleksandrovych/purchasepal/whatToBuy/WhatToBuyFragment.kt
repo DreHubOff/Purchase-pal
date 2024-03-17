@@ -6,17 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.aleksandrovych.purchasepal.R
 import com.aleksandrovych.purchasepal.databinding.FragmentWhatToByBinding
+import com.aleksandrovych.purchasepal.extensions.launchWhenResumed
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class WhatToBuyFragment : Fragment() {
@@ -77,32 +74,28 @@ class WhatToBuyFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.observeItems(args.whatToBuyListArg).collectLatest { list ->
-                    adapter?.submitList(list)
-                }
+        launchWhenResumed {
+            viewModel.observeItems(args.whatToBuyListArg).collectLatest { list ->
+                adapter?.submitList(list)
             }
         }
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.badListEventFlow.collect {
-                    MaterialAlertDialogBuilder(binding.root.context)
-                        .setMessage(R.string.message_list_damaged_or_removed_would_you_like_to_save_it)
-                        .setPositiveButton(R.string.yes) { _, _ ->
-                            viewModel.mapListToLocal(args.whatToBuyListArg)
-                        }
-                        .setNegativeButton(R.string.no) { _, _ ->
-                            viewModel.deleteCurrentList(args.whatToBuyListArg)
-                        }
-                        .show()
-                }
+
+        launchWhenResumed {
+            viewModel.badListEventFlow.collect {
+                MaterialAlertDialogBuilder(binding.root.context)
+                    .setMessage(R.string.message_list_damaged_or_removed_would_you_like_to_save_it)
+                    .setPositiveButton(R.string.yes) { _, _ ->
+                        viewModel.mapListToLocal(args.whatToBuyListArg)
+                    }
+                    .setNegativeButton(R.string.no) { _, _ ->
+                        viewModel.deleteCurrentList(args.whatToBuyListArg)
+                    }
+                    .show()
             }
         }
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.onListRemovedEventFlow.collect { findNavController().popBackStack() }
-            }
+
+        launchWhenResumed {
+            viewModel.onListRemovedEventFlow.collect { findNavController().popBackStack() }
         }
     }
 

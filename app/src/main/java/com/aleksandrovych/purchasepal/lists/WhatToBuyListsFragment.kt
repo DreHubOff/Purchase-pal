@@ -6,15 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.aleksandrovych.purchasepal.R
 import com.aleksandrovych.purchasepal.databinding.FragmentWhatToByListsBinding
+import com.aleksandrovych.purchasepal.extensions.launchWhenResumed
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class WhatToBuyListsFragment : Fragment() {
@@ -57,19 +54,15 @@ class WhatToBuyListsFragment : Fragment() {
             viewModel.prepareEmptyList()
         }
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.observeLists().collect { list -> adapter?.submitList(list) }
-            }
+        launchWhenResumed {
+            viewModel.observeLists().collect { list -> adapter?.submitList(list) }
         }
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.emptyListFlow.collect { list ->
-                    val action = WhatToBuyListsFragmentDirections
-                        .actionWhatToBuyListsFragmentToAddWhatToBuyListDialog(list)
-                    findNavController().navigate(action)
-                }
+        launchWhenResumed {
+            viewModel.emptyListFlow.collect { list ->
+                val action = WhatToBuyListsFragmentDirections
+                    .actionWhatToBuyListsFragmentToAddWhatToBuyListDialog(list)
+                findNavController().navigate(action)
             }
         }
     }

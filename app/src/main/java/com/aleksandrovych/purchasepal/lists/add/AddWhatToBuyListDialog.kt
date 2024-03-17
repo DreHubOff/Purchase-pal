@@ -8,13 +8,12 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.aleksandrovych.purchasepal.KeyboardManager
 import com.aleksandrovych.purchasepal.R
 import com.aleksandrovych.purchasepal.databinding.DialogAddWhatToByListBinding
+import com.aleksandrovych.purchasepal.extensions.launchWhenResumed
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -64,10 +63,8 @@ class AddWhatToBuyListDialog : DialogFragment() {
             viewModel.saveList(binding.titleEditText.text.toString())
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.dismissFlow.collect { dismiss() }
-            }
+        launchWhenResumed {
+            viewModel.dismissFlow.collect { dismiss() }
         }
     }
 

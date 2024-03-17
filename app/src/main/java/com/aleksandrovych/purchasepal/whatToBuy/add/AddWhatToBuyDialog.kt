@@ -11,13 +11,12 @@ import androidx.core.view.isGone
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.aleksandrovych.purchasepal.KeyboardManager
 import com.aleksandrovych.purchasepal.R
 import com.aleksandrovych.purchasepal.databinding.DialogAddWhatToByBinding
+import com.aleksandrovych.purchasepal.extensions.launchWhenResumed
 import com.aleksandrovych.purchasepal.whatToBuy.WhatToBuy
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -94,13 +93,11 @@ class AddWhatToBuyDialog : DialogFragment() {
             keyboardManager.show(binding.titleAutoCompleteTextView)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.suggestionsFlow.collectLatest { suggestions ->
-                    suggestionsAdapter.clear()
-                    suggestionsAdapter.addAll(suggestions)
-                    suggestionsAdapter.notifyDataSetChanged()
-                }
+        launchWhenResumed {
+            viewModel.suggestionsFlow.collectLatest { suggestions ->
+                suggestionsAdapter.clear()
+                suggestionsAdapter.addAll(suggestions)
+                suggestionsAdapter.notifyDataSetChanged()
             }
         }
     }
