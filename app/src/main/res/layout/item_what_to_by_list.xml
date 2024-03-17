@@ -69,7 +69,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/progressTextView"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/onlineButton"
@@ -99,7 +99,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/offlineButton"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/deleteButton"
@@ -111,7 +111,8 @@
             android:minWidth="0dp"
             android:minHeight="0dp"
             android:padding="0dp"
-            android:paddingStart="8dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
             app:cornerRadius="20dp"
             app:icon="@drawable/ic_close"
             app:layout_constraintBottom_toBottomOf="parent"

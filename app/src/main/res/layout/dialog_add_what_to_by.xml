@@ -28,6 +28,7 @@
             android:paddingHorizontal="16dp"
             android:paddingTop="20dp"
             android:paddingBottom="10dp"
+            android:textAlignment="viewStart"
             tools:text="@tools:sample/lorem">
 
             <requestFocus />
