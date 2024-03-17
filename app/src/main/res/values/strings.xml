@@ -1,3 +1,26 @@
 <resources>
-    <string name="app_name">Purchase Pal</string>
+    <string name="app_name" translatable="false">Purchase Pal</string>
+    <string name="purchase_pal_database_name" translatable="false">purchase_pal_database</string>
+
+    <string name="offline">Offline</string>
+    <string name="online">Online</string>
+    <string name="pattern_list_progress" translatable="false">%1$d/%2$d</string>
+    <string name="pattern_list_default_name" >List: %1$s</string>
+    <string name="date_format_list_default_name" translatable="false">dd/MM/yyyy HH:mm</string>
+    <string name="add_item_product_name_hint">Product name</string>
+    <string name="add_item_product_position_in_shop_hint">Position in the store</string>
+    <string name="save">Save</string>
+    <string name="add_item_list_name_hint">List name</string>
+    <string name="title_list_of_lists">Your lists</string>
+    <string name="share">Share</string>
+    <string name="message_list_already_added">This list has already been added</string>
+    <string name="message_list_damaged_or_removed">This list has been corrupted or deleted</string>
+    <string name="share_list_title_hint">Shopping list:\n%1$s</string>
+    <string name="share_using_some_app_title_hint">Share via…</string>
+    <string name="message_confirm_item_deletion">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="message_confirm_joint_list_editing">Want to be able to edit your list together with the recipient?</string>
+    <string name="message_list_damaged_or_removed_would_you_like_to_save_it">This list has been corrupted or deleted. Do you want to save it on this device?</string>
+    <string name="message_not_all_fields_are_filled_in">Not all fields are filled in</string>
 </resources>

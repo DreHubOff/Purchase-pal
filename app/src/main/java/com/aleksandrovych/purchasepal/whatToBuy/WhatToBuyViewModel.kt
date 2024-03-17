@@ -10,6 +10,9 @@ import com.aleksandrovych.purchasepal.Cipher.encryptDecryptXOR
 import com.aleksandrovych.purchasepal.Deeplink
 import com.aleksandrovych.purchasepal.FirebaseDatabase.getShareListReference
 import com.aleksandrovych.purchasepal.FirebaseDatabase.pushSharedList
+import com.aleksandrovych.purchasepal.R
+import com.aleksandrovych.purchasepal.ResourceProvider
+import com.aleksandrovych.purchasepal.ResourceProvider.Companion.toStringPointer
 import com.aleksandrovych.purchasepal.VibratorManager
 import com.aleksandrovych.purchasepal.domain.DeleteListInteractor
 import com.aleksandrovych.purchasepal.domain.DeleteWhatToBuyItemInteractor
@@ -55,6 +58,7 @@ class WhatToBuyViewModel @Inject constructor(
     private val deleteWhatToBuyItemInteractor: DeleteWhatToBuyItemInteractor,
     private val deleteListInteractor: DeleteListInteractor,
     private val vibratorManager: VibratorManager,
+    private val resourceProvider: ResourceProvider,
 ) : ViewModel() {
 
     private val coroutineExceptionHandler: CoroutineExceptionHandler =
@@ -165,12 +169,12 @@ class WhatToBuyViewModel @Inject constructor(
                 }
             }.await().shortLink
 
-            val message = "Список покупок:\n${shortLink}"
-
+            val message = resourceProvider[R.string.share_list_title_hint.toStringPointer(shortLink)]
             val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "text/plain"
+            intent.type = Deeplink.mimeType
             intent.putExtra(Intent.EXTRA_TEXT, message)
-            val chooser = Intent.createChooser(intent, "Поделиться через...")
+            val chooserTitle = resourceProvider[R.string.share_using_some_app_title_hint.toStringPointer()]
+            val chooser = Intent.createChooser(intent, chooserTitle)
             if (intent.resolveActivity(activity.packageManager) != null) {
                 activity.startActivity(chooser)
             }

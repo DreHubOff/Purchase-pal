@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.aleksandrovych.purchasepal.KeyboardManager
+import com.aleksandrovych.purchasepal.R
 import com.aleksandrovych.purchasepal.databinding.DialogAddWhatToByListBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -22,8 +23,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AddWhatToBuyListDialog : DialogFragment() {
 
-    @Inject
-    @Suppress("ProtectedInFinal")
+    @[Inject Suppress("ProtectedInFinal")]
     protected lateinit var keyboardManager: KeyboardManager
 
     private val viewModel: AddWhatToBuyListViewModel by viewModels()
@@ -56,7 +56,7 @@ class AddWhatToBuyListDialog : DialogFragment() {
             if (binding.titleEditText.text?.toString().isNullOrEmpty()) {
                 Toast.makeText(
                     requireContext(),
-                    "Не все поля заполнены",
+                    R.string.message_not_all_fields_are_filled_in,
                     Toast.LENGTH_SHORT,
                 ).show()
                 return@setOnClickListener

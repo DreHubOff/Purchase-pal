@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.aleksandrovych.purchasepal.ResourceProvider.Companion.toStringPointer
 import com.aleksandrovych.purchasepal.lists.WhatToBuyList
 import com.aleksandrovych.purchasepal.lists.WhatToBuyListsDao
 import com.aleksandrovych.purchasepal.whatToBuy.WhatToBuy
@@ -38,11 +39,14 @@ abstract class Database : RoomDatabase() {
 
         @Provides
         @Singleton
-        fun getDatabase(@ApplicationContext context: Context): com.aleksandrovych.purchasepal.Database =
+        fun getDatabase(
+            @ApplicationContext context: Context,
+            resourceProvider: ResourceProvider,
+        ): com.aleksandrovych.purchasepal.Database =
             Room.databaseBuilder(
                 context.applicationContext,
                 com.aleksandrovych.purchasepal.Database::class.java,
-                "purchase_pal_database"
+                resourceProvider[R.string.purchase_pal_database_name.toStringPointer()]
             ).build()
 
         @Provides

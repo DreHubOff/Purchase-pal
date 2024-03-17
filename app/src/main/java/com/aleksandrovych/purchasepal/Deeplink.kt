@@ -9,6 +9,7 @@ import kotlinx.coroutines.tasks.await
 object Deeplink {
 
     const val scheme = "https"
+    const val mimeType = "text/plain"
     const val host = BuildConfig.APP_DOMAIN
 
     const val sharePath = "share"

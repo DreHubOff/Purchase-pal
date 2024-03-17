@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-@Suppress("ProtectedInFinal")
 @Parcelize
 @Entity(tableName = "what_to_buy_suggestion")
 data class WhatToBuySuggestion(

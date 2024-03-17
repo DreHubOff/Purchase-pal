@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.aleksandrovych.purchasepal.R
 import com.aleksandrovych.purchasepal.databinding.FragmentWhatToByListsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,23 +45,31 @@ class WhatToBuyListsFragment : Fragment() {
             },
             onDeleteClicked = { list ->
                 MaterialAlertDialogBuilder(binding.root.context)
-                    .setMessage("Вы уверены, что хотите удалить \"${list.title}\"?")
-                    .setPositiveButton("Да") { _, _ -> viewModel.delete(list) }
-                    .setNegativeButton("Нет") { _, _ -> }
+                    .setMessage(getString(R.string.message_confirm_item_deletion, list.title))
+                    .setPositiveButton(R.string.yes) { _, _ -> viewModel.delete(list) }
+                    .setNegativeButton(R.string.no) { _, _ -> }
                     .show()
             }
         )
         binding.recyclerView.adapter = adapter
 
         binding.addButton.setOnClickListener {
-            val action = WhatToBuyListsFragmentDirections
-                .actionWhatToBuyListsFragmentToAddWhatToBuyListDialog(WhatToBuyList())
-            findNavController().navigate(action)
+            viewModel.prepareEmptyList()
         }
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.observeLists().collect { list -> adapter?.submitList(list) }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.emptyListFlow.collect { list ->
+                    val action = WhatToBuyListsFragmentDirections
+                        .actionWhatToBuyListsFragmentToAddWhatToBuyListDialog(list)
+                    findNavController().navigate(action)
+                }
             }
         }
     }

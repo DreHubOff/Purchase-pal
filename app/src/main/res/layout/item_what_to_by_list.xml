@@ -5,9 +5,9 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginHorizontal="4dp"
     app:cardCornerRadius="4dp"
     app:cardElevation="2dp"
-    android:layout_marginHorizontal="4dp"
     app:cardUseCompatPadding="true"
     app:contentPadding="8dp">
 
@@ -56,7 +56,7 @@
             android:paddingVertical="2dp"
             android:paddingStart="4dp"
             android:paddingEnd="8dp"
-            android:text="Offline"
+            android:text="@string/offline"
             android:textAllCaps="false"
             android:textSize="12sp"
             android:visibility="gone"
@@ -84,7 +84,7 @@
             android:paddingVertical="2dp"
             android:paddingStart="4dp"
             android:paddingEnd="8dp"
-            android:text="Online"
+            android:text="@string/online"
             android:textAllCaps="false"
             android:textSize="12sp"
             android:visibility="gone"

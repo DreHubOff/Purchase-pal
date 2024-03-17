@@ -44,9 +44,9 @@ class WhatToBuyFragment : Fragment() {
             onItemChecked = viewModel::updateCheckedItem,
             onRemoveItem = { item ->
                 MaterialAlertDialogBuilder(binding.root.context)
-                    .setMessage("Вы уверены, что хотите удалить \"${item.title}\"?")
-                    .setPositiveButton("Да") { _, _ -> viewModel.delete(item) }
-                    .setNegativeButton("Нет") { _, _ -> }
+                    .setMessage(getString(R.string.message_confirm_item_deletion, item.title))
+                    .setPositiveButton(R.string.yes) { _, _ -> viewModel.delete(item) }
+                    .setNegativeButton(R.string.no) { _, _ -> }
                     .show()
             }
         )
@@ -66,9 +66,9 @@ class WhatToBuyFragment : Fragment() {
             when (item.itemId) {
                 R.id.share_item_id -> {
                     MaterialAlertDialogBuilder(binding.root.context)
-                        .setMessage("Хотите иметь возможность редактировать список совместно с получателем?")
-                        .setPositiveButton("Да") { _, _ -> share(offline = false) }
-                        .setNegativeButton("Нет") { _, _ -> share(offline = true) }
+                        .setMessage(R.string.message_confirm_joint_list_editing)
+                        .setPositiveButton(R.string.yes) { _, _ -> share(offline = false) }
+                        .setNegativeButton(R.string.no) { _, _ -> share(offline = true) }
                         .show()
                     true
                 }
@@ -88,11 +88,11 @@ class WhatToBuyFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.badListEventFlow.collect {
                     MaterialAlertDialogBuilder(binding.root.context)
-                        .setMessage("Этот список был поврежден или удален. Хотите сохранить его на этом устройстве?")
-                        .setPositiveButton("Да") { _, _ ->
+                        .setMessage(R.string.message_list_damaged_or_removed_would_you_like_to_save_it)
+                        .setPositiveButton(R.string.yes) { _, _ ->
                             viewModel.mapListToLocal(args.whatToBuyListArg)
                         }
-                        .setNegativeButton("Нет") { _, _ ->
+                        .setNegativeButton(R.string.no) { _, _ ->
                             viewModel.deleteCurrentList(args.whatToBuyListArg)
                         }
                         .show()

@@ -22,8 +22,8 @@
             app:menu="@menu/main_manu"
             app:navigationIcon="@drawable/ic_back"
             app:navigationIconTint="@color/white"
-            app:title="Your list"
-            app:titleTextColor="@color/white" />
+            app:titleTextColor="@color/white"
+            tools:title="Your list" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private const val LAST_VIEWED_LIST_KEY = "LAST_VIEWED_LIST"
+private const val LAST_VIEWED_STORAGE_FILE_NAME = "last-viewed-storage"
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -34,11 +35,8 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private var binding: ActivityMainBinding? = null
     private val navController: NavController?
-        get() {
-            return (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment)
-                ?.findNavController()
-        }
-    private val preferences by lazy { getSharedPreferences("prefs", MODE_PRIVATE) }
+        get() = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment)?.findNavController()
+    private val preferences by lazy { getSharedPreferences(LAST_VIEWED_STORAGE_FILE_NAME, MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,8 +50,8 @@ class MainActivity : AppCompatActivity() {
                 viewModel.listAlreadySharedEventFlow.collect {
                     Toast.makeText(
                         this@MainActivity,
-                        "Этот список уже добавлен",
-                        Toast.LENGTH_SHORT
+                        getString(R.string.message_list_already_added),
+                        Toast.LENGTH_SHORT,
                     ).show()
                 }
             }
@@ -64,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                 viewModel.badListEventFlow.collect {
                     Toast.makeText(
                         this@MainActivity,
-                        "Этот список был поврежден или удален",
+                        getString(R.string.message_list_damaged_or_removed),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -80,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.checkDeepLinks(intent)
     }
 
+    // TODO: Move to data layer. Track progress here: https://github.com/DreHubOff/Purchase-pal/issues/1
     private fun observeLastViewedList() {
         lifecycleScope.launch(Dispatchers.Default) {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
@@ -111,9 +110,7 @@ class MainActivity : AppCompatActivity() {
             val listArg = Gson().fromJson(args, WhatToBuyList::class.java)
             withContext(Dispatchers.Main) {
                 navController?.navigate(
-                    WhatToBuyListsFragmentDirections.actionWhatToBuyListsFragmentToWhatToBuyFragment(
-                        listArg
-                    )
+                    WhatToBuyListsFragmentDirections.actionWhatToBuyListsFragmentToWhatToBuyFragment(listArg)
                 )
             }
         }

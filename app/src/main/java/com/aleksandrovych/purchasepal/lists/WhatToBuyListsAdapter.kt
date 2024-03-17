@@ -6,6 +6,7 @@ import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.aleksandrovych.purchasepal.R
 import com.aleksandrovych.purchasepal.databinding.ItemWhatToByListBinding
 
 class WhatToBuyListsAdapter(
@@ -56,7 +57,9 @@ class WhatToBuyListsAdapter(
             binding.offlineButton.isGone =
                 !item.list.isShared || !item.list.firebaseId.isNullOrEmpty()
             binding.onlineButton.isGone = item.list.firebaseId.isNullOrEmpty()
-            binding.progressTextView.text = "${item.doneItemsCount}/${item.totalCount}"
+            binding.progressTextView.text = itemView
+                .resources
+                .getString(R.string.pattern_list_progress, item.doneItemsCount, item.totalCount)
         }
     }
 }

@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import com.aleksandrovych.purchasepal.KeyboardManager
+import com.aleksandrovych.purchasepal.R
 import com.aleksandrovych.purchasepal.databinding.DialogAddWhatToByBinding
 import com.aleksandrovych.purchasepal.whatToBuy.WhatToBuy
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,8 +53,11 @@ class AddWhatToBuyDialog : DialogFragment() {
 
         binding.saveButton.setOnClickListener {
             val title = binding.titleAutoCompleteTextView.text?.toString().orEmpty().ifEmpty {
-                Toast.makeText(binding.root.context, "Не все поля заполнены", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(
+                    binding.root.context,
+                    R.string.message_not_all_fields_are_filled_in,
+                    Toast.LENGTH_SHORT,
+                ).show()
                 return@setOnClickListener
             }
             val positionInShop = binding

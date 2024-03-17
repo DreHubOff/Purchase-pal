@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Warm Orange Colors -->
     <color name="warm_orange_500">#FFA726</color>
     <color name="warm_orange_700">#FF9800</color>
-    <color name="warm_orange_900">#E65100</color>
 
-    <!-- Teal Colors (used for secondary brand color) -->
     <color name="teal_200">#80CBC4</color>
     <color name="teal_700">#00796B</color>
 
-    <!-- Other colors -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 </resources>

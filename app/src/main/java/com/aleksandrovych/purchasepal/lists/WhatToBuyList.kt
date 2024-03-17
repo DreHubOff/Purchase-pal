@@ -7,8 +7,6 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Parcelize
 @Suppress("ProtectedInFinal")
@@ -20,7 +18,7 @@ data class WhatToBuyList(
     protected val _id: Int? = null,
 
     @ColumnInfo(name = "title")
-    val title: String = defaultTitle(),
+    val title: String,
 
     @ColumnInfo(name = "is_shared")
     val isShared: Boolean = false,
@@ -42,11 +40,5 @@ data class WhatToBuyList(
     companion object {
 
         const val ID_COLUMN_NAME = "id"
-
-        fun defaultTitle() = "Список #${formatDateToString(LocalDateTime.now())}"
-
-        private fun formatDateToString(date: LocalDateTime): String {
-            return date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
-        }
     }
 }

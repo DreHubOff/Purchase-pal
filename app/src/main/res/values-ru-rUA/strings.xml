@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="offline">Офлайн</string>
+    <string name="online">Онлайн</string>
+    <string name="pattern_list_default_name">Список: %1$s</string>
+    <string name="add_item_product_name_hint">Название продукта</string>
+    <string name="add_item_product_position_in_shop_hint">Позиция в магазине</string>
+    <string name="save">Сохранить</string>
+    <string name="add_item_list_name_hint">Название списка</string>
+    <string name="title_list_of_lists">Ваши списки</string>
+    <string name="share">Поделиться</string>
+    <string name="message_list_already_added">Этот список уже добавлен</string>
+    <string name="message_list_damaged_or_removed">Этот список был поврежден или удален</string>
+    <string name="share_list_title_hint">Список покупок:\n%1$s</string>
+    <string name="share_using_some_app_title_hint">Поделиться через…</string>
+    <string name="message_confirm_item_deletion">Вы уверены, что хотите удалить \"%1$s\"?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="message_confirm_joint_list_editing">Хотите иметь возможность редактировать список совместно с получателем?</string>
+    <string name="message_list_damaged_or_removed_would_you_like_to_save_it">Этот список был поврежден или удален. Хотите сохранить его на этом устройстве?</string>
+    <string name="message_not_all_fields_are_filled_in">Не все поля заполнены</string>
+</resources>

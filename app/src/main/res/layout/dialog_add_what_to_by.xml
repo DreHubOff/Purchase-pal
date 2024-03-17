@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:completionThreshold="1"
-            android:hint="Название продукта"
+            android:hint="@string/add_item_product_name_hint"
             android:inputType="text"
             android:paddingHorizontal="16dp"
             android:paddingTop="20dp"
@@ -48,7 +48,7 @@
             android:id="@+id/positionInShopInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Позиция в магазине"
+            android:hint="@string/add_item_product_position_in_shop_hint"
             android:inputType="number"
             tools:text="12" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:minHeight="58dp"
-        android:text="Сохранить"
+        android:text="@string/save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/positionInShopTextInputLayout" />
