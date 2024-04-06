@@ -1,53 +1,23 @@
 package com.aleksandrovych.purchasepal.lists
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.aleksandrovych.purchasepal.R
 import com.aleksandrovych.purchasepal.databinding.FragmentWhatToByListsBinding
 import com.aleksandrovych.purchasepal.extensions.launchWhenResumed
+import com.aleksandrovych.purchasepal.extensions.lifecycle
+import com.aleksandrovych.purchasepal.ui.base.BaseFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class WhatToBuyListsFragment : Fragment() {
+class WhatToBuyListsFragment : BaseFragment<FragmentWhatToByListsBinding>() {
 
     private val viewModel: WhatToBuyListsViewModel by viewModels()
-    private var binding: FragmentWhatToByListsBinding? = null
-    private var adapter: WhatToBuyListsAdapter? = null
+    private val adapter: WhatToBuyListsAdapter? by lifecycle(
+        releaseAction = { binding?.recyclerView?.adapter = null },
+        initializer = ::createListAdapter,
+    )
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        binding = FragmentWhatToByListsBinding.inflate(
-            inflater,
-            container,
-            false
-        ).apply(::onViewCreated)
-        return binding!!.root
-    }
-
-    private fun onViewCreated(binding: FragmentWhatToByListsBinding) {
-        adapter = WhatToBuyListsAdapter(
-            onItemClicked = { list ->
-                val action = WhatToBuyListsFragmentDirections
-                    .actionWhatToBuyListsFragmentToWhatToBuyFragment(list)
-                findNavController().navigate(action)
-            },
-            onDeleteClicked = { list ->
-                MaterialAlertDialogBuilder(binding.root.context)
-                    .setMessage(getString(R.string.message_confirm_item_deletion, list.title))
-                    .setPositiveButton(R.string.yes) { _, _ -> viewModel.delete(list) }
-                    .setNegativeButton(R.string.no) { _, _ -> }
-                    .show()
-            }
-        )
+    override fun onBindingCreated(binding: FragmentWhatToByListsBinding) {
         binding.recyclerView.adapter = adapter
 
         binding.addButton.setOnClickListener {
@@ -67,9 +37,21 @@ class WhatToBuyListsFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        binding = null
-        adapter = null
-        super.onDestroyView()
+    private fun createListAdapter(): WhatToBuyListsAdapter {
+        return WhatToBuyListsAdapter(
+            onItemClicked = { list ->
+                val action = WhatToBuyListsFragmentDirections
+                    .actionWhatToBuyListsFragmentToWhatToBuyFragment(list)
+                findNavController().navigate(action)
+            },
+            onDeleteClicked = { list ->
+                context
+                    ?.let(::MaterialAlertDialogBuilder)
+                    ?.setMessage(getString(R.string.message_confirm_item_deletion, list.title))
+                    ?.setPositiveButton(R.string.yes) { _, _ -> viewModel.delete(list) }
+                    ?.setNegativeButton(R.string.no) { _, _ -> }
+                    ?.show()
+            }
+        )
     }
 }

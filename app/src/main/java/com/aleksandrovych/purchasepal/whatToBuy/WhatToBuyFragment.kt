@@ -1,52 +1,39 @@
 package com.aleksandrovych.purchasepal.whatToBuy
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.aleksandrovych.purchasepal.R
 import com.aleksandrovych.purchasepal.databinding.FragmentWhatToByBinding
 import com.aleksandrovych.purchasepal.extensions.launchWhenResumed
+import com.aleksandrovych.purchasepal.extensions.lifecycle
+import com.aleksandrovych.purchasepal.ui.base.BaseFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
-@AndroidEntryPoint
-class WhatToBuyFragment : Fragment() {
+class WhatToBuyFragment : BaseFragment<FragmentWhatToByBinding>() {
 
     private val viewModel: WhatToBuyViewModel by viewModels()
-    private var binding: FragmentWhatToByBinding? = null
-    private var adapter: WhatToBuyAdapter? = null
+    private val adapter: WhatToBuyAdapter? by lifecycle(
+        releaseAction = { binding?.recyclerView?.adapter = null },
+    ) {
+        WhatToBuyAdapter(
+            onItemChecked = viewModel::updateCheckedItem,
+            onRemoveItem = { item ->
+                context
+                    ?.let(::MaterialAlertDialogBuilder)
+                    ?.setMessage(getString(R.string.message_confirm_item_deletion, item.title))
+                    ?.setPositiveButton(R.string.yes) { _, _ -> viewModel.delete(item) }
+                    ?.setNegativeButton(R.string.no) { _, _ -> }
+                    ?.show()
+            }
+        )
+    }
 
     private val args: WhatToBuyFragmentArgs by navArgs()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        binding = FragmentWhatToByBinding.inflate(inflater, container, false)
-            .apply(::onViewCreated)
-        return binding!!.root
-    }
-
-    private fun onViewCreated(binding: FragmentWhatToByBinding) {
+    override fun onBindingCreated(binding: FragmentWhatToByBinding) {
         binding.toolbar.title = args.whatToBuyListArg.title
-
-        adapter = WhatToBuyAdapter(
-            onItemChecked = viewModel::updateCheckedItem,
-            onRemoveItem = { item ->
-                MaterialAlertDialogBuilder(binding.root.context)
-                    .setMessage(getString(R.string.message_confirm_item_deletion, item.title))
-                    .setPositiveButton(R.string.yes) { _, _ -> viewModel.delete(item) }
-                    .setNegativeButton(R.string.no) { _, _ -> }
-                    .show()
-            }
-        )
 
         binding.recyclerView.adapter = adapter
         binding.addButton.setOnClickListener {
@@ -106,11 +93,5 @@ class WhatToBuyFragment : Fragment() {
 
     private fun share(offline: Boolean) {
         viewModel.shareList(adapter?.currentList.orEmpty(), requireActivity(), offline)
-    }
-
-    override fun onDestroyView() {
-        adapter = null
-        binding = null
-        super.onDestroyView()
     }
 }

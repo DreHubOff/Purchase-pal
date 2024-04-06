@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,11 +13,12 @@ import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.aleksandrovych.purchasepal.databinding.ActivityMainBinding
+import com.aleksandrovych.purchasepal.extensions.launchWhenCreated
 import com.aleksandrovych.purchasepal.lists.WhatToBuyList
 import com.aleksandrovych.purchasepal.lists.WhatToBuyListsFragmentDirections
+import com.aleksandrovych.purchasepal.ui.base.BaseActivity
 import com.aleksandrovych.purchasepal.whatToBuy.WhatToBuyFragmentArgs
 import com.google.gson.Gson
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -29,43 +29,34 @@ import kotlinx.coroutines.withContext
 private const val LAST_VIEWED_LIST_KEY = "LAST_VIEWED_LIST"
 private const val LAST_VIEWED_STORAGE_FILE_NAME = "last-viewed-storage"
 
-@AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     private val viewModel: MainViewModel by viewModels()
-    private var binding: ActivityMainBinding? = null
     private val navController: NavController?
         get() = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment)?.findNavController()
     private val preferences by lazy { getSharedPreferences(LAST_VIEWED_STORAGE_FILE_NAME, MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding!!.root)
-
         viewModel.checkDeepLinks(intent)
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.listAlreadySharedEventFlow.collect {
-                    Toast.makeText(
-                        this@MainActivity,
-                        getString(R.string.message_list_already_added),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
+        launchWhenCreated {
+            viewModel.listAlreadySharedEventFlow.collect {
+                Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.message_list_already_added),
+                    Toast.LENGTH_SHORT,
+                ).show()
             }
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.badListEventFlow.collect {
-                    Toast.makeText(
-                        this@MainActivity,
-                        getString(R.string.message_list_damaged_or_removed),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+        launchWhenCreated {
+            viewModel.badListEventFlow.collect {
+                Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.message_list_damaged_or_removed),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -114,10 +105,5 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
-    }
-
-    override fun onDestroy() {
-        binding = null
-        super.onDestroy()
     }
 }

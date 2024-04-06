@@ -3,8 +3,6 @@ package com.aleksandrovych.purchasepal.whatToBuy
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.aleksandrovych.purchasepal.BuildConfig
 import com.aleksandrovych.purchasepal.Cipher.encryptDecryptXOR
 import com.aleksandrovych.purchasepal.Deeplink
@@ -21,6 +19,7 @@ import com.aleksandrovych.purchasepal.domain.UpdateWhatToBuyItemInteractor
 import com.aleksandrovych.purchasepal.lists.WhatToBuyList
 import com.aleksandrovych.purchasepal.lists.WhatToBuyListWithItems
 import com.aleksandrovych.purchasepal.lists.WhatToBuyListsDao
+import com.aleksandrovych.purchasepal.ui.base.BaseViewModel
 import com.aleksandrovych.purchasepal.whatToBuy.share.WhatToBuyShareOffline
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -32,7 +31,6 @@ import com.google.firebase.dynamiclinks.ktx.shortLinkAsync
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.awaitClose
@@ -42,7 +40,6 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -59,10 +56,7 @@ class WhatToBuyViewModel @Inject constructor(
     private val deleteListInteractor: DeleteListInteractor,
     private val vibratorManager: VibratorManager,
     private val resourceProvider: ResourceProvider,
-) : ViewModel() {
-
-    private val coroutineExceptionHandler: CoroutineExceptionHandler =
-        CoroutineExceptionHandler { _, throwable -> throwable.printStackTrace() }
+) : BaseViewModel() {
 
     private var observeRemoteItemsJob: Job? = null
     val badListEventFlow = MutableSharedFlow<Unit>()
@@ -78,38 +72,35 @@ class WhatToBuyViewModel @Inject constructor(
     }
 
     private fun observeRemoteItems(firebaseListId: String, localListId: Int) {
-        observeRemoteItemsJob =
-            viewModelScope.launch(coroutineExceptionHandler + Dispatchers.IO) {
+        observeRemoteItemsJob = launch {
 
-                callbackFlow {
-                    val listener = object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            if (!snapshot.exists()) {
-                                notifyListRemoved()
-                                return
-                            }
-                            trySendBlocking(snapshot)
+            callbackFlow {
+                val listener = object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if (!snapshot.exists()) {
+                            notifyListRemoved()
+                            return
                         }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            error.toException().printStackTrace()
-                        }
-                    }.also(firebaseDb.getShareListReference(firebaseListId)::addValueEventListener)
-
-                    awaitClose {
-                        firebaseDb.getShareListReference(firebaseListId)
-                            .removeEventListener(listener)
+                        trySendBlocking(snapshot)
                     }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        error.toException().printStackTrace()
+                    }
+                }.also(firebaseDb.getShareListReference(firebaseListId)::addValueEventListener)
+
+                awaitClose {
+                    firebaseDb.getShareListReference(firebaseListId)
+                        .removeEventListener(listener)
                 }
-                    .map(com.aleksandrovych.purchasepal.FirebaseDatabase::dataSnapshotToItems)
-                    .collectLatest { saveRemoteItems(localListId, it) }
             }
+                .map(com.aleksandrovych.purchasepal.FirebaseDatabase::dataSnapshotToItems)
+                .collectLatest { saveRemoteItems(localListId, it) }
+        }
     }
 
     private fun notifyListRemoved() {
-        viewModelScope.launch(coroutineExceptionHandler + Dispatchers.IO) {
-            badListEventFlow.emit(Unit)
-        }
+        launch(coroutineContext + Dispatchers.Default) { badListEventFlow.emit(Unit) }
     }
 
     private suspend fun saveRemoteItems(localListId: Int, remoteList: List<WhatToBuy>) {
@@ -139,20 +130,20 @@ class WhatToBuyViewModel @Inject constructor(
     }
 
     fun updateCheckedItem(checked: Boolean, item: WhatToBuy) {
-        viewModelScope.launch(coroutineExceptionHandler + Dispatchers.IO) {
+        launch {
             updateWhatToBuyItemInteractor(item.copy(done = checked))
         }
     }
 
     fun delete(item: WhatToBuy) {
-        viewModelScope.launch(coroutineExceptionHandler + Dispatchers.IO) {
+        launch {
             deleteWhatToBuyItemInteractor(item)
         }
     }
 
     fun shareList(list: List<WhatToBuy>, activity: Activity, offline: Boolean) {
         list.ifEmpty { return }
-        viewModelScope.launch(coroutineExceptionHandler + Dispatchers.IO) {
+        launch {
             val deepLink = if (offline) {
                 getOfflineDeeplinkUrl(list)
             } else {
@@ -232,14 +223,14 @@ class WhatToBuyViewModel @Inject constructor(
     }
 
     fun deleteCurrentList(list: WhatToBuyList) {
-        viewModelScope.launch(coroutineExceptionHandler + Dispatchers.IO) {
+        launch {
             deleteListInteractor(list)
             onListRemovedEventFlow.emit(Unit)
         }
     }
 
     fun mapListToLocal(list: WhatToBuyList) {
-        viewModelScope.launch(coroutineExceptionHandler + Dispatchers.IO) {
+        launch {
             releaseObservers()
             val localMetadata = list.copy(isShared = false, shareUuid = null, firebaseId = null)
             val localList = whatToBuyDao.getByListId(list.id).map { it.copy(uniquePublicId = null) }

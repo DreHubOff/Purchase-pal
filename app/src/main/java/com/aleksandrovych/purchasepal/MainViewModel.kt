@@ -2,7 +2,6 @@ package com.aleksandrovych.purchasepal
 
 import android.content.Intent
 import android.net.Uri
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aleksandrovych.purchasepal.Cipher.encryptDecryptXOR
 import com.aleksandrovych.purchasepal.FirebaseDatabase.getShareListReference
@@ -11,6 +10,7 @@ import com.aleksandrovych.purchasepal.domain.DoAuthRequiredWorkInteractor
 import com.aleksandrovych.purchasepal.domain.SaveNewListInteractor
 import com.aleksandrovych.purchasepal.lists.WhatToBuyList
 import com.aleksandrovych.purchasepal.lists.WhatToBuyListsDao
+import com.aleksandrovych.purchasepal.ui.base.BaseViewModel
 import com.aleksandrovych.purchasepal.whatToBuy.WhatToBuy
 import com.aleksandrovych.purchasepal.whatToBuy.share.WhatToBuyShareOffline
 import com.google.firebase.database.FirebaseDatabase
@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor(
     private val firebaseDb: FirebaseDatabase,
     private val saveNewListInteractor: SaveNewListInteractor,
     private val doAuthRequiredWorkInteractor: DoAuthRequiredWorkInteractor,
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val coroutineExceptionHandler: CoroutineExceptionHandler =
         CoroutineExceptionHandler { _, throwable -> throwable.printStackTrace() }
