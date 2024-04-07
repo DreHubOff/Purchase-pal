@@ -6,14 +6,7 @@ import com.aleksandrovych.purchasepal.whatToBuy.WhatToBuy
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.tasks.await
-import javax.inject.Singleton
 
 object FirebaseDatabase {
 
@@ -102,14 +95,5 @@ object FirebaseDatabase {
             done = data[DONE_KEY] as Boolean,
             uniquePublicId = id,
         )
-    }
-
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object DI {
-
-        @Provides
-        @Singleton
-        fun provideDb(): FirebaseDatabase = Firebase.database(BuildConfig.REALTIME_DB_LOCATION)
     }
 }

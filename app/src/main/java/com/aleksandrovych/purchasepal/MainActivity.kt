@@ -19,6 +19,7 @@ import com.aleksandrovych.purchasepal.lists.WhatToBuyListsFragmentDirections
 import com.aleksandrovych.purchasepal.ui.base.BaseActivity
 import com.aleksandrovych.purchasepal.whatToBuy.WhatToBuyFragmentArgs
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -29,6 +30,7 @@ import kotlinx.coroutines.withContext
 private const val LAST_VIEWED_LIST_KEY = "LAST_VIEWED_LIST"
 private const val LAST_VIEWED_STORAGE_FILE_NAME = "last-viewed-storage"
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     private val viewModel: MainViewModel by viewModels()

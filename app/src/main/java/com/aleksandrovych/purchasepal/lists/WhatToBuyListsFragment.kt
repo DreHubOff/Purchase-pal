@@ -8,7 +8,9 @@ import com.aleksandrovych.purchasepal.extensions.launchWhenResumed
 import com.aleksandrovych.purchasepal.extensions.lifecycle
 import com.aleksandrovych.purchasepal.ui.base.BaseFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class WhatToBuyListsFragment : BaseFragment<FragmentWhatToByListsBinding>() {
 
     private val viewModel: WhatToBuyListsViewModel by viewModels()

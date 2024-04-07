@@ -1,15 +1,10 @@
 package com.aleksandrovych.purchasepal
 
-import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.StringRes
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
+import javax.inject.Inject
 
-class ResourceProvider private constructor(private val resources: Resources) {
+class ResourceProvider @Inject constructor(private val resources: Resources) {
 
     @Suppress("UNCHECKED_CAST")
     operator fun <T> get(resourcePointer: ResourcePointer<T>): T {
@@ -26,14 +21,5 @@ class ResourceProvider private constructor(private val resources: Resources) {
     companion object {
 
         fun Int.toStringPointer(vararg args: Any?) = ResourcePointer.StringPointer(this, args)
-    }
-
-    @Module
-    @InstallIn(SingletonComponent::class)
-    object ResourceProviderModule {
-
-        @Provides
-        fun getResourceProvider(@ApplicationContext context: Context): ResourceProvider =
-            ResourceProvider(context.resources)
     }
 }

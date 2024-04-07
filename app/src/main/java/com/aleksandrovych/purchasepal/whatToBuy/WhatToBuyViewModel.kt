@@ -3,6 +3,7 @@ package com.aleksandrovych.purchasepal.whatToBuy
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import androidx.lifecycle.ViewModelProvider
 import com.aleksandrovych.purchasepal.BuildConfig
 import com.aleksandrovych.purchasepal.Cipher.encryptDecryptXOR
 import com.aleksandrovych.purchasepal.Deeplink
@@ -16,6 +17,7 @@ import com.aleksandrovych.purchasepal.domain.DeleteListInteractor
 import com.aleksandrovych.purchasepal.domain.DeleteWhatToBuyItemInteractor
 import com.aleksandrovych.purchasepal.domain.DoAuthRequiredWorkInteractor
 import com.aleksandrovych.purchasepal.domain.UpdateWhatToBuyItemInteractor
+import com.aleksandrovych.purchasepal.extensions.SingleTypeViewModelFactory
 import com.aleksandrovych.purchasepal.lists.WhatToBuyList
 import com.aleksandrovych.purchasepal.lists.WhatToBuyListWithItems
 import com.aleksandrovych.purchasepal.lists.WhatToBuyListsDao
@@ -30,7 +32,9 @@ import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.dynamiclinks.ktx.shortLinkAsync
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.awaitClose
@@ -43,10 +47,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.UUID
-import javax.inject.Inject
 
-@HiltViewModel
-class WhatToBuyViewModel @Inject constructor(
+class WhatToBuyViewModel @AssistedInject constructor(
+    @Assisted private val whatToBuyList: WhatToBuyList,
     private val whatToBuyDao: WhatToBuyDao,
     private val whatToBuyListDao: WhatToBuyListsDao,
     private val firebaseDb: FirebaseDatabase,
@@ -62,12 +65,12 @@ class WhatToBuyViewModel @Inject constructor(
     val badListEventFlow = MutableSharedFlow<Unit>()
     val onListRemovedEventFlow = MutableSharedFlow<Unit>()
 
-    fun observeItems(list: WhatToBuyList) = whatToBuyDao.observe(list.id).onEach { localItems ->
+    fun observeItems() = whatToBuyDao.observe(whatToBuyList.id).onEach { _ ->
         if (observeRemoteItemsJob?.isActive == true) return@onEach
-        val actualList = whatToBuyListDao.getById(list.id)
+        val actualList = whatToBuyListDao.getById(whatToBuyList.id)
         val firebaseId = actualList.firebaseId
         if (!firebaseId.isNullOrEmpty()) {
-            doAuthRequiredWorkInteractor { observeRemoteItems(firebaseId, list.id) }
+            doAuthRequiredWorkInteractor { observeRemoteItems(firebaseId, whatToBuyList.id) }
         }
     }
 
@@ -222,20 +225,30 @@ class WhatToBuyViewModel @Inject constructor(
         observeRemoteItemsJob = null
     }
 
-    fun deleteCurrentList(list: WhatToBuyList) {
+    fun deleteCurrentList() {
         launch {
-            deleteListInteractor(list)
+            deleteListInteractor(whatToBuyList)
             onListRemovedEventFlow.emit(Unit)
         }
     }
 
-    fun mapListToLocal(list: WhatToBuyList) {
+    fun mapListToLocal() {
         launch {
             releaseObservers()
-            val localMetadata = list.copy(isShared = false, shareUuid = null, firebaseId = null)
-            val localList = whatToBuyDao.getByListId(list.id).map { it.copy(uniquePublicId = null) }
+            val localMetadata = whatToBuyList.copy(isShared = false, shareUuid = null, firebaseId = null)
+            val localList = whatToBuyDao.getByListId(whatToBuyList.id).map { it.copy(uniquePublicId = null) }
             whatToBuyDao.update(localList)
             whatToBuyListDao.update(localMetadata)
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(list: WhatToBuyList): WhatToBuyViewModel
+    }
+
+    companion object {
+        fun Factory.asViewModelFactory(list: WhatToBuyList): ViewModelProvider.Factory =
+            SingleTypeViewModelFactory { create(list) }
     }
 }

@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.aleksandrovych.purchasepal.extensions.inflateBinding
 
-abstract class BaseFragment<VB : ViewBinding> : InjectableFragment(), BaseBindingComponent<VB> {
+abstract class BaseFragment<VB : ViewBinding> : Fragment(), BaseBindingComponent<VB> {
 
     protected var binding: VB? = null
 

@@ -8,17 +8,28 @@ import com.aleksandrovych.purchasepal.databinding.FragmentWhatToByBinding
 import com.aleksandrovych.purchasepal.extensions.launchWhenResumed
 import com.aleksandrovych.purchasepal.extensions.lifecycle
 import com.aleksandrovych.purchasepal.ui.base.BaseFragment
+import com.aleksandrovych.purchasepal.whatToBuy.WhatToBuyViewModel.Companion.asViewModelFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class WhatToBuyFragment : BaseFragment<FragmentWhatToByBinding>() {
 
-    private val viewModel: WhatToBuyViewModel by viewModels()
+    @Inject
+    @Suppress("ProtectedInFinal")
+    protected lateinit var viewModelFactory: WhatToBuyViewModel.Factory
+
+    private val viewModel: WhatToBuyViewModel by viewModels {
+        viewModelFactory.asViewModelFactory(args.whatToBuyListArg)
+    }
+
     private val adapter: WhatToBuyAdapter? by lifecycle(
         releaseAction = { binding?.recyclerView?.adapter = null },
     ) {
         WhatToBuyAdapter(
-            onItemChecked = viewModel::updateCheckedItem,
+            onItemChecked = { checked, item -> viewModel.updateCheckedItem(checked, item) },
             onRemoveItem = { item ->
                 context
                     ?.let(::MaterialAlertDialogBuilder)
@@ -62,7 +73,7 @@ class WhatToBuyFragment : BaseFragment<FragmentWhatToByBinding>() {
         }
 
         launchWhenResumed {
-            viewModel.observeItems(args.whatToBuyListArg).collectLatest { list ->
+            viewModel.observeItems().collectLatest { list ->
                 adapter?.submitList(list)
             }
         }
@@ -71,12 +82,8 @@ class WhatToBuyFragment : BaseFragment<FragmentWhatToByBinding>() {
             viewModel.badListEventFlow.collect {
                 MaterialAlertDialogBuilder(binding.root.context)
                     .setMessage(R.string.message_list_damaged_or_removed_would_you_like_to_save_it)
-                    .setPositiveButton(R.string.yes) { _, _ ->
-                        viewModel.mapListToLocal(args.whatToBuyListArg)
-                    }
-                    .setNegativeButton(R.string.no) { _, _ ->
-                        viewModel.deleteCurrentList(args.whatToBuyListArg)
-                    }
+                    .setPositiveButton(R.string.yes) { _, _ -> viewModel.mapListToLocal() }
+                    .setNegativeButton(R.string.no) { _, _ -> viewModel.deleteCurrentList() }
                     .show()
             }
         }
