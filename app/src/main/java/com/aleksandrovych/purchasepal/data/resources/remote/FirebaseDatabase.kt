@@ -1,4 +1,4 @@
-package com.aleksandrovych.purchasepal
+package com.aleksandrovych.purchasepal.data.resources.remote
 
 import com.aleksandrovych.purchasepal.lists.WhatToBuyList
 import com.aleksandrovych.purchasepal.lists.WhatToBuyListWithItems

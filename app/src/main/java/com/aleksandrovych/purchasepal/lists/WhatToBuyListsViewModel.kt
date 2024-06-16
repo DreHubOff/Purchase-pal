@@ -1,8 +1,8 @@
 package com.aleksandrovych.purchasepal.lists
 
 import com.aleksandrovych.purchasepal.R
-import com.aleksandrovych.purchasepal.ResourceProvider
-import com.aleksandrovych.purchasepal.ResourceProvider.Companion.toStringPointer
+import com.aleksandrovych.purchasepal.data.resources.local.ResourceProvider
+import com.aleksandrovych.purchasepal.data.resources.local.ResourceProvider.Companion.toStringPointer
 import com.aleksandrovych.purchasepal.domain.DeleteListInteractor
 import com.aleksandrovych.purchasepal.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

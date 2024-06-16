@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.aleksandrovych.purchasepal.BuildConfig
 import com.aleksandrovych.purchasepal.Cipher.encryptDecryptXOR
 import com.aleksandrovych.purchasepal.Deeplink
-import com.aleksandrovych.purchasepal.FirebaseDatabase.getShareListReference
-import com.aleksandrovych.purchasepal.FirebaseDatabase.pushSharedList
 import com.aleksandrovych.purchasepal.R
-import com.aleksandrovych.purchasepal.ResourceProvider
-import com.aleksandrovych.purchasepal.ResourceProvider.Companion.toStringPointer
 import com.aleksandrovych.purchasepal.VibratorManager
+import com.aleksandrovych.purchasepal.data.resources.local.ResourceProvider
+import com.aleksandrovych.purchasepal.data.resources.local.ResourceProvider.Companion.toStringPointer
+import com.aleksandrovych.purchasepal.data.resources.remote.FirebaseDatabase.getShareListReference
+import com.aleksandrovych.purchasepal.data.resources.remote.FirebaseDatabase.pushSharedList
 import com.aleksandrovych.purchasepal.domain.DeleteListInteractor
 import com.aleksandrovych.purchasepal.domain.DeleteWhatToBuyItemInteractor
 import com.aleksandrovych.purchasepal.domain.DoAuthRequiredWorkInteractor
@@ -97,7 +97,7 @@ class WhatToBuyViewModel @AssistedInject constructor(
                         .removeEventListener(listener)
                 }
             }
-                .map(com.aleksandrovych.purchasepal.FirebaseDatabase::dataSnapshotToItems)
+                .map(com.aleksandrovych.purchasepal.data.resources.remote.FirebaseDatabase::dataSnapshotToItems)
                 .collectLatest { saveRemoteItems(localListId, it) }
         }
     }

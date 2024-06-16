@@ -2,10 +2,12 @@ package com.aleksandrovych.purchasepal.di
 
 import android.content.Context
 import androidx.room.Room
-import com.aleksandrovych.purchasepal.Database
 import com.aleksandrovych.purchasepal.R
-import com.aleksandrovych.purchasepal.ResourceProvider
-import com.aleksandrovych.purchasepal.ResourceProvider.Companion.toStringPointer
+import com.aleksandrovych.purchasepal.data.resources.local.Database
+import com.aleksandrovych.purchasepal.data.resources.local.PrimitiveStorageImpl
+import com.aleksandrovych.purchasepal.data.resources.local.ResourceProvider
+import com.aleksandrovych.purchasepal.data.resources.local.ResourceProvider.Companion.toStringPointer
+import com.aleksandrovych.purchasepal.data.resources.local.UserPreferencesStore
 import com.aleksandrovych.purchasepal.lists.WhatToBuyListsDao
 import com.aleksandrovych.purchasepal.whatToBuy.WhatToBuyDao
 import com.aleksandrovych.purchasepal.whatToBuy.suggestion.WhatToBuySuggestionDao
@@ -39,4 +41,11 @@ object LocalStorageModule {
 
     @Provides
     fun provideWhatToBuyListsDao(db: Database): WhatToBuyListsDao = db.whatToBuyListsDao()
+
+    @Provides
+    fun provideUserPreferencesStore(@ApplicationContext context: Context): UserPreferencesStore {
+        val nativePreferences = context.getSharedPreferences(UserPreferencesStore.STORE_FILE_NAME, Context.MODE_PRIVATE)
+        val primitivesStore = PrimitiveStorageImpl(nativePreferences)
+        return UserPreferencesStore(primitivesStore)
+    }
 }

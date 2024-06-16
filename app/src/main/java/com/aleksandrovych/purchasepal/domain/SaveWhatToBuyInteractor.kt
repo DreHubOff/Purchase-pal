@@ -1,7 +1,7 @@
 package com.aleksandrovych.purchasepal.domain
 
-import com.aleksandrovych.purchasepal.FirebaseDatabase.getShareListReference
-import com.aleksandrovych.purchasepal.FirebaseDatabase.pushSharedItems
+import com.aleksandrovych.purchasepal.data.resources.remote.FirebaseDatabase.getShareListReference
+import com.aleksandrovych.purchasepal.data.resources.remote.FirebaseDatabase.pushSharedItems
 import com.aleksandrovych.purchasepal.lists.WhatToBuyListsDao
 import com.aleksandrovych.purchasepal.whatToBuy.WhatToBuy
 import com.aleksandrovych.purchasepal.whatToBuy.WhatToBuyDao

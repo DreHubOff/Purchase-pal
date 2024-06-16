@@ -1,4 +1,4 @@
-package com.aleksandrovych.purchasepal
+package com.aleksandrovych.purchasepal.data.resources.local
 
 import android.content.res.Resources
 import androidx.annotation.StringRes
