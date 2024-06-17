@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.9.20"
+kotlin = "2.0.0"
 java = "17"
 
 android-minSdk = "26"
@@ -24,6 +24,7 @@ constraintLayout = "2.1.4"
 appcompat = "1.6.1"
 fragmentKtx = "1.6.2"
 room = "2.6.1"
+composeBom = "2024.06.00"
 
 material = "1.11.0"
 gson = "2.9.0"
@@ -48,6 +49,12 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
 
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+
 google-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
@@ -62,3 +69,7 @@ kotlin-parcelize = { id = "kotlin-parcelize", version.ref = "kotlin" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServises" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
+[bundles]
+androidx-compose = ["androidx-compose-ui", "androidx-compose-ui-graphics", "androidx-compose-ui-tooling-preview", "androidx-compose-material3"]

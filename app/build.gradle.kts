@@ -17,6 +17,7 @@ plugins {
     addPlugin(libs.plugins.dagger.hilt)
     addPlugin(libs.plugins.google.services)
     addPlugin(libs.plugins.navigation.safeargs)
+    addPlugin(libs.plugins.compose.compiler)
 }
 
 android {
@@ -67,12 +68,14 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        compose = true
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
         targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
     }
+
     kotlinOptions {
         jvmTarget = libs.versions.java.get()
     }
@@ -104,6 +107,9 @@ dependencies {
 
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.bundles.androidx.compose)
 }
 
 fun loadPropertiesFile(file: File): Properties? {

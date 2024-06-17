@@ -19,6 +19,6 @@
 *.iml
 
 /app/build
-/app/google-services.json
 /app/release/
 /app/debug/
+/.kotlin/
