@@ -1,3 +1,6 @@
+import com.android.build.gradle.internal.tasks.databinding.DataBindingGenBaseClassesTask
+import org.gradle.configurationcache.extensions.capitalized
+import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompileTool
 import java.util.Properties
 
 buildscript {
@@ -12,7 +15,7 @@ plugins {
     fun addPlugin(dependency: Provider<PluginDependency>) = id(dependency.get().pluginId)
     addPlugin(libs.plugins.android.application)
     addPlugin(libs.plugins.kotlin.android)
-    addPlugin(libs.plugins.kotlin.kapt)
+    addPlugin(libs.plugins.kotlin.ksp)
     addPlugin(libs.plugins.kotlin.parcelize)
     addPlugin(libs.plugins.dagger.hilt)
     addPlugin(libs.plugins.google.services)
@@ -81,8 +84,18 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        afterEvaluate {
+            project.tasks.getByName("ksp" + variant.name.capitalized() + "Kotlin") {
+                val dataBindingTask = project
+                    .tasks
+                    .getByName("dataBindingGenBaseClasses" + variant.name.capitalized())
+                        as DataBindingGenBaseClassesTask
+                (this as AbstractKotlinCompileTool<*>).setSource(dataBindingTask.sourceOutFolder)
+            }
+        }
+    }
 }
 
 dependencies {
@@ -95,11 +108,11 @@ dependencies {
     implementation(libs.google.material)
 
     implementation(libs.androidx.room.runtime)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
     implementation(libs.dagger.hilt.android)
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
 
     implementation(libs.firebase.dynamicLinks.ktx)
     implementation(libs.firebase.auth.ktx)
