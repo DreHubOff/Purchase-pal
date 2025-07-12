@@ -9,9 +9,9 @@ convenience in mind, it ensures a seamless experience even when the system kills
 
 * **🗂️ Organized Shopping Lists**:
   View all your shopping lists on the main screen.
-  <div align="center">
-    <img src="./demo/Offline_online_lists.png" alt="Offline & Online Lists" width="300" />
-    <img src="./demo/add_list.png" alt="Add Shopping List" width="300" />
+  <div>
+    <img src="./demo/Offline_online_lists.png" alt="Offline & Online Lists" width="200" />
+    <img src="./demo/add_list.png" alt="Add Shopping List" width="200" />
   </div>
 
 * **📝 List Details View**:
