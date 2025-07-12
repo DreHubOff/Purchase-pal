@@ -153,7 +153,6 @@ class WhatToBuyViewModel @AssistedInject constructor(
                 getOnlineDeeplinkUrl(list)
             }
 
-
             val shortLink = Firebase.dynamicLinks.shortLinkAsync {
                 link = deepLink
                 domainUriPrefix = BuildConfig.FIREBASE_DEEPLINK_DOMAIN
