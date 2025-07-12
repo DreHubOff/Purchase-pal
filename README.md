@@ -16,9 +16,18 @@ convenience in mind, it ensures a seamless experience even when the system kills
 
 * **📝 List Details View**:
   Tap into any list to view and manage its items.
+  <div>
+    <img src="./demo/Completed_items.png" alt="Items example" width="200" />
+    <img src="./demo/share_list_prompt.png" alt="Share Shopping List" width="200" />
+    <img src="./demo/share_list_android_prompt.png" alt="Select application to share list" width="200" />
+  </div>
 
 * **➕ Add Items and Lists**:
   Both main and list screens include an **Add** button for quick input.
+  <div>
+    <img src="./demo/add_item_suggestions.png" alt="Offline & Online Lists" width="200" />
+    <img src="./demo/add_product.png" alt="Offline & Online Lists" width="200" />
+  </div>
 
 * **⚡ Smart Resume Behavior**:
   When launching the app, it instantly opens the **last active shopping list**, skipping unnecessary screens. No extra
